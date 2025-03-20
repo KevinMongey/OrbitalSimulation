@@ -20,7 +20,7 @@ public class Planet {
 	double vy;
 	Color color;
 	// Constructor class
-	public Planet(double x, double y, double mass, double radius, Color color){
+	public Planet(double x, double y, double mass, double radius, double vy, Color color){
 		this.x = x;
 		this.y = y;
 		this.mass = mass;
@@ -58,7 +58,9 @@ public class Planet {
 
 	public void draw(Graphics g) {
 		g.setColor(color);
-		g.fillOval((int) x, (int) y, (int) radius, (int) radius);
+		double scaledX = (int)(x / SCALE) + (int)(1280 / 2);
+		double scaledY = (int)(y / SCALE) + (int)(720 / 2);
+		g.fillOval((int) scaledX, (int) scaledY, (int) radius, (int) radius);
 
 	}
 

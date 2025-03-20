@@ -1,10 +1,14 @@
-public class Planet{
+package OrbitalSimulation;
+
+import java.awt.*;
+
+public class Planet {
 
 
 	//Constants
 	final double G = 6.67430e-11;
 	final double SCALE = 1.5e9;
-	final double TIME_STEP = 1e5;
+	final double TIMESTEP = 1e5;
 
 
 	// variables
@@ -14,16 +18,16 @@ public class Planet{
 	double radius;
 	double vx;
 	double vy;
-	// color
-
+	Color color;
 	// Constructor class
-	public Planet(double x, double y, double mass, double radius, double vx, double vy){
+	public Planet(double x, double y, double mass, double radius, Color color){
 		this.x = x;
 		this.y = y;
 		this.mass = mass;
 		this.radius = radius;
 		this.vx = 0;
 		this.vy = 0;
+		this.color = color;
 		// color
 
 	}
@@ -37,10 +41,10 @@ public class Planet{
 		// distance
 		double dx = other.x - this.x;
 		double dy = other.y - this.y;
-		double distance = sqrt(dx * dx + dy * dy );
+		double distance = Math.sqrt(dx * dx + dy * dy );
 
 		// force
-		double force = (G * this.mass * other.mass) / (distance * distance));
+		double force = (G * this.mass * other.mass) / (distance * distance);
 		double fx = force * (dx / distance);
 		double fy = force * (dy / distance);
 
@@ -49,6 +53,12 @@ public class Planet{
 		double ay = fy / this.mass;
 		this.vx += ax * TIMESTEP;
 		this.vy += ay * TIMESTEP;
+
+	}
+
+	public void draw(Graphics g) {
+		g.setColor(color);
+		g.fillOval((int) x, (int) y, (int) radius, (int) radius);
 
 	}
 

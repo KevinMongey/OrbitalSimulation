@@ -25,15 +25,10 @@ public class Planet {
 		this.y = y;
 		this.mass = mass;
 		this.radius = radius;
-		this.vx = 0;
-		this.vy = 0;
 		this.color = color;
-		// color
-
-	}
-	// Initilize the planets Y velocity
-	public void setYVelocity(double vy){
 		this.vy = vy;
+
+
 	}
 
 	public void applyGravity(Planet other){
@@ -53,6 +48,12 @@ public class Planet {
 		double ay = fy / this.mass;
 		this.vx += ax * TIMESTEP;
 		this.vy += ay * TIMESTEP;
+
+	}
+
+	public void updatePosition(){
+		x += vx * TIMESTEP;
+		y += vy * TIMESTEP;
 
 	}
 

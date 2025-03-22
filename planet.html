@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbital Simulation</title>
+
+    <style>
+        body { 
+                margin: 0; 
+                background: black;
+                overflow: hidden; }
+
+        canvas { 
+            display: block; 
+        }
+    </style>
+
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <script>
+        // Setup canvas
+        const canvas = document.getElementById("canvas");
+        const draw = canvas.getContext("2d");  
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Constants
+        const G = 6.67430e-11;
+        const SCALE = 1.5e9;
+        const TIMESTEP = 1e5;
+
+        // Planet class
+        class Planet {
+            constructor(x, y, mass, radius, vx, vy, color) {
+                this.x = x;
+                this.y = y;
+                this.mass = mass;
+                this.radius = radius;
+                this.vx = vx;
+                this.vy = vy;
+                this.color = color;
+                this.trail = [];  
+            }
+
+            applyGravity(other) {
+                let dx = other.x - this.x;
+                let dy = other.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy) 
+
+                let force = (G * this.mass * other.mass) / (distance * distance);
+                let fx = force * (dx / distance);
+                let fy = force * (dy / distance);
+
+                let ax = fx / this.mass;
+                let ay = fy / this.mass;
+
+                this.vx += ax * TIMESTEP;
+                this.vy += ay * TIMESTEP;
+            }
+
+            updatePosition() {
+                // Update trail
+                this.trail.push({ x: this.x, y: this.y });
+                if (this.trail.length > 50) this.trail.shift(); 
+
+                // Update position
+                this.x += this.vx * TIMESTEP;
+                this.y += this.vy * TIMESTEP;
+            }
+
+            drawPlanet() {
+                // Draw trail
+                draw.strokeStyle = this.color;
+                draw.beginPath();
+                this.trail.forEach((pos, index) => {
+                    draw.globalAlpha = index / this.trail.length; 
+                    draw.lineTo(pos.x / SCALE + canvas.width / 2, pos.y / SCALE + canvas.height / 2);
+                });
+                draw.stroke();
+                draw.globalAlpha = 1.0;
+
+                // Draw planet
+                draw.fillStyle = this.color;
+                draw.beginPath();
+                draw.arc(this.x / SCALE + canvas.width / 2, this.y / SCALE + canvas.height / 2, this.radius, 0, Math.PI * 2);
+                draw.fill();
+            }
+        }
+
+        // Create planets
+        let planets = [
+            new Planet(0, 0, 1.989e30, 20, 0, 0, "yellow"),   // Sun
+            new Planet(1.496e11, 0, 5.972e24, 10, 0, 29780, "green"),  // Earth
+            new Planet(2.279e11, 0, 6.39e23, 8, 0, 24130, "red"),   // Mars
+            new Planet(7.785e11, 0, 1.898e27, 15, 0, 13070, "orange"),  // Jupiter
+            new Planet(5.46e10, 0, 3.3e23, 5, 0, 47000, "pink"),  // Mercury
+            new Planet(1.08e11, 0, 4.87e24, 6, 0, 35000, "gray")   // Venus
+        ];
+
+        // Animation loop
+        function animate() {
+            draw.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Apply gravity 
+            for (let i = 0; i < planets.length; i++) {
+                for (let j = 0; j < planets.length; j++) {
+                    if (i !== j) {
+                        planets[i].applyGravity(planets[j]);
+                    }
+                }
+            }
+
+            // Update and draw planets
+            planets.forEach(planet => {
+                planet.updatePosition();
+                planet.drawPlanet();  
+            });
+
+            requestAnimationFrame(animate);  
+        }
+
+        animate(); 
+    </script>
+</body>
+</html>

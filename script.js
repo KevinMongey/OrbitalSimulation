@@ -17,7 +17,7 @@ const canvas = document.getElementById("canvas");
             TIMESTEP = parseFloat(speedSlider.value) * 1e5;
             speedValue.textContent = speedSlider.value;
         });
-
+        // class constructor
         class Planet {
             constructor(x, y, mass, radius, vx, vy, color) {
                 this.x = x;

@@ -1,0 +1,21 @@
+body { 
+    margin: 0; 
+    background: black;
+    overflow: hidden;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+canvas { 
+    display: block; 
+}
+.controls {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+}
+input[type="range"] {
+    width: 200px;
+}
